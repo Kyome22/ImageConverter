@@ -46,7 +46,6 @@ function convertSupport(req, res, type) {
     form.parse(req, function(err, fields, files) {
         let oldpath = files.userfile.path;
         let newpath = "./up/" + files.userfile.name.replace(/\s/g, "");
-        console.log(oldpath + ",  " + newpath);
         fs.rename(oldpath, newpath, function(err) {
             if (err) throw err;
             run("/bin/bash ./shell/" + type + ".sh " + files.userfile.name.replace(/\s/g, ""), function(result) {
