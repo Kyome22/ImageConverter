@@ -14,26 +14,11 @@ console.log("http://localhost:8080");
 function fileRequest(req, res) {
     switch(req.url) {
         case "/":
-        fs.readFile("./index.html", "UTF-8", function(err, data) {
-            res.writeHead(200, {"Content-Type" : "text/html"});
-            res.write(data);
-            res.end();
-        });
-        break;
+        getFileSupport(res, "./index.html", "text/html"); break;
         case "/css/style.css":
-        fs.readFile("./css/style.css", "UTF-8", function(err, data) {
-            res.writeHead(200, {"Content-Type" : "text/css"});
-            res.write(data);
-            res.end();
-        });
-        break;
+        getFileSupport(res, "./css/style.css", "text/css"); break;
         case "/js/front.js":
-        fs.readFile("./js/front.js", "UTF-8", function(err, data) {
-            res.writeHead(200, {"Content-Type" : "text/javascript"});
-            res.write(data);
-            res.end();
-        });
-        break;
+        getFileSupport(res, "./js/front.js", "text/javascript"); break;
         case "/api/ios.convert":
         convertSupport(req, res, "ios"); break;
         case "/api/android.convert":
@@ -46,6 +31,14 @@ function fileRequest(req, res) {
         console.log(req.url);
         break;
     }
+}
+
+function getFileSupport(res, path, type) {
+    fs.readFile(path, "UTF-8", function(err, data) {
+        res.writeHead(200, {"Content-Type" : type});
+        res.write(data);
+        res.end();
+    });
 }
 
 function convertSupport(req, res, type) {
