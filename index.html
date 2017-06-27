@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href="css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+	<p><h2>ImageConverter</h2></p>
+	<div id="main">
+		<form name="imageUpload" action="upload" method="POST" enctype="multipart/form-data" autocomplete="off">
+			<p>
+				出力タイプ：
+				<select name="type" id="outputType">
+					<option value="iOS">iOS</option>
+					<option value="Android">Android</option>
+				</select>
+			</p>
+			<p><span id="w">0</span>px × <span id="h">0</span>px 推奨</p>
+			<p><input type="file" accept="image/jpeg,image/png" name="userfile" id="usrFile"></p>
+			<p class="btn"><input type="submit" value="変換" id="submitBtn"/></p>
+		</form>
+	</div>
+	<script type="text/javascript" src="js/front.js"></script>
+</body>
+</html>
