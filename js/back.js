@@ -10,7 +10,6 @@ server.listen(process.env.VMC_APP_PORT || 8080);
 console.log("Server running ...");
 console.log("http://localhost:8080");
 
-
 function fileRequest(req, res) {
     switch(req.url) {
         case "/":
@@ -23,12 +22,14 @@ function fileRequest(req, res) {
         convertSupport(req, res, "ios"); break;
         case "/api/android.convert":
         convertSupport(req, res, "android"); break;
-        case "/down/ios_img.zip":
-        downloadSupport(res, "./down/ios_img.zip"); break;
-        case "/down/android_img.zip":
-        downloadSupport(res, "./down/android_img.zip"); break;
         default:
-        console.log(req.url);
+        if (req.url.match(/\/api\/ios\.download\//)) {
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_img.zip");
+        } else if (req.url.match(/\/api\/android\.download\//)) {
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "android_img.zip"); break;
+        } else {
+            console.log(req.url);
+        }
         break;
     }
 }
@@ -42,28 +43,36 @@ function getFileSupport(res, path, type) {
 }
 
 function convertSupport(req, res, type) {
-    let form = new formidable.IncomingForm();
+    const form = new formidable.IncomingForm();
     form.parse(req, function(err, fields, files) {
-        let oldpath = files.userfile.path;
-        let newpath = "./up/" + files.userfile.name.replace(/\s/g, "");
-        fs.rename(oldpath, newpath, function(err) {
-            if (err) throw err;
-            run("/bin/bash ./shell/" + type + ".sh " + files.userfile.name.replace(/\s/g, ""), function(result) {
-                res.write(result);
-                res.end();
-            });
+        const dirName = getUniqueStr();
+        fs.mkdir("./shed/" + dirName, 0750, function (err) {
+            const oldpath = files.userfile.path;
+            if (err) {
+                fs.unlink(oldpath, function(err) {
+                    if (err) throw err;
+                });
+            } else {
+                const extension = (files.userfile.type == "image/png") ? ".png" : ".jpeg";
+                fs.rename(oldpath, "./shed/" + dirName + "/original" + extension, function(err) {
+                    if (err) throw err;
+                    run("/bin/bash ./shell/" + type + ".sh " + "./shed/" + dirName + " /original" + extension, function(result) {
+                        res.write(result + "," + dirName);
+                        res.end();
+                    });
+                });
+            }
         });
     });
 }
 
-function downloadSupport(res, path) {
+function downloadSupport(res, dirName, fileName) {
     res.writeHead(200, {"Content-Type" : "application/zip"});
-    fs.createReadStream(path).pipe(res);
-    setTimeout(function() {
-        exec("rm -f " + path, function(err, stdout, stderr) {
-            if (err) { console.log(err); }
-        });
-    }, 2000);
+    const stream = fs.createReadStream(dirName + "/" + fileName);
+    stream.on("end", function() {
+        exec("rm -rf " + dirName);
+    });
+    stream.pipe(res);
 }
 
 //run shellScript
@@ -72,9 +81,15 @@ function run(cmd, callback) {
         if (err) {
             callback("Failed");
             console.log(err);
+        } else {
+            callback("Success");
         }
-        //console.log("stdout: " + stdout);
-        //console.log("stderr: " + stderr);
-        callback("Success");
     });
+}
+
+//generate unique string
+function getUniqueStr() {
+    const dateStr = new Date().getTime().toString(16).toUpperCase().slice(-4);
+    const randomStr = ("0000" + Math.floor(Math.random() * 65536).toString(16).toUpperCase()).slice(-4);
+    return dateStr + "_" + randomStr;
 }

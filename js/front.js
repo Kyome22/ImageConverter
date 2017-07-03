@@ -1,9 +1,9 @@
-let mainObj = document.getElementById("main");
-let sizeW = document.getElementById("w");
-let sizeH = document.getElementById("h");
-let typeObj = document.getElementById("outputType");
-let fileObj = document.getElementById("usrFile");
-let submitObj = document.getElementById("submitBtn");
+const mainObj = document.getElementById("main");
+const sizeW = document.getElementById("w");
+const sizeH = document.getElementById("h");
+const typeObj = document.getElementById("outputType");
+const fileObj = document.getElementById("usrFile");
+const submitObj = document.getElementById("submitBtn");
 
 window.onload = function() {
 	document.addEventListener("dragover", function(evt) {
@@ -64,7 +64,7 @@ function recommendSize() {
 }
 
 function upload(type) {
-	let httpReq = new XMLHttpRequest();
+	const httpReq = new XMLHttpRequest();
 	httpReq.onreadystatechange = function() {
 		switch (httpReq.readyState) {
 			case 0:
@@ -78,12 +78,13 @@ function upload(type) {
 			case 4:
 			if (httpReq.status == 200 || httpReq.status == 304) {
 				console.log("COMPLETE! :" + httpReq.responseText);
-				if (httpReq.responseText == "Success") {
+				const result = httpReq.responseText.split(",");
+				if (result[0] == "Success") {
 					switch(type) {
 						case "iOS":
-						setTimeout(function() { download("ios_img.zip"); }, 1000); break;
+						setTimeout(function() { download(result[1], "ios"); }, 1000); break;
 						case "Android":
-						setTimeout(function() { download("android_img.zip"); }, 1000); break;
+						setTimeout(function() { download(result[1], "android"); }, 1000); break;
 						default: break;
 					}
 				}
@@ -103,11 +104,11 @@ function upload(type) {
 	let res = httpReq.send(new FormData(document.imageUpload));
 }
 
-function download(fileName) {
-	let link = document.createElement("a");
+function download(dirName, type) {
+	const link = document.createElement("a");
 	document.body.appendChild(link);
-	link.href = "./down/" + fileName;
-	link.download = fileName;
+	link.href = "./api/" + type + ".download/" + dirName;
+	link.download = type + "_img.zip";
 	link.click();
 	document.body.removeChild(link);
 }
