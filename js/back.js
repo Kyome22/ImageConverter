@@ -11,26 +11,31 @@ console.log("Server running ...");
 console.log("http://localhost:8080");
 
 function fileRequest(req, res) {
-    switch(req.url) {
-        case "/":
+    switch (true) {
+        case (/^\/$/).test(req.url):
         getFileSupport(res, "./index.html", "text/html"); break;
-        case "/css/style.css":
+        case (/^\/css\/style\.css$/).test(req.url):
         getFileSupport(res, "./css/style.css", "text/css"); break;
-        case "/js/front.js":
+        case (/^\/js\/front\.js$/).test(req.url):
         getFileSupport(res, "./js/front.js", "text/javascript"); break;
-        case "/api/ios.convert":
-        convertSupport(req, res, "ios"); break;
-        case "/api/android.convert":
-        convertSupport(req, res, "android"); break;
-        default:
-        if (req.url.match(/\/api\/ios\.download\//)) {
-            downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_img.zip");
-        } else if (req.url.match(/\/api\/android\.download\//)) {
+        case (/^\/api/).test(req.url):
+        switch (true) {
+            case (/\/ios\.convert$/).test(req.url):
+            convertSupport(req, res, "ios"); break;
+            case (/\/android\.convert$/).test(req.url):
+            convertSupport(req, res, "android"); break;
+            case (/\/ios\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_img.zip"); break;
+            case (/\/android\.download\//).test(req.url):
             downloadSupport(res, "./shed/" + req.url.slice(-9), "android_img.zip"); break;
-        } else {
-            console.log(req.url);
+            default:
+            console.log(req.url); break;
         }
         break;
+        case (/^\/favicon\.ico$/):
+        break;
+        default:
+        console.log(req.url); break;
     }
 }
 
