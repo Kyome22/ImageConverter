@@ -29,12 +29,18 @@ function fileRequest(req, res) {
             case (/\/android\.download\//).test(req.url):
             downloadSupport(res, "./shed/" + req.url.slice(-9), "android_img.zip"); break;
             default:
+            res.writeHead(400, {"Content-Type" : "text/plain"});
+            res.write("400 Bad Request");
+            res.end();
             console.log(req.url); break;
         }
         break;
         case (/^\/favicon\.ico$/):
         break;
         default:
+        res.writeHead(400, {"Content-Type" : "text/plain"});
+        res.write("400 Bad Request");
+        res.end();
         console.log(req.url); break;
     }
 }
@@ -57,11 +63,15 @@ function convertSupport(req, res, type) {
                 fs.unlink(oldpath, function(err) {
                     if (err) throw err;
                 });
+                res.writeHead(421, {"Content-Type" : "text/plain"});
+                res.write("421 Misdirected Request");
+                res.end();
             } else {
                 const extension = (files.userfile.type == "image/png") ? ".png" : ".jpeg";
                 fs.rename(oldpath, "./shed/" + dirName + "/original" + extension, function(err) {
                     if (err) throw err;
                     run("/bin/bash ./shell/" + type + ".sh " + "./shed/" + dirName + " /original" + extension, function(result) {
+                        res.writeHead(200, {"Content-Type" : "text/plain"});
                         res.write(result + "," + dirName);
                         res.end();
                     });
@@ -72,12 +82,21 @@ function convertSupport(req, res, type) {
 }
 
 function downloadSupport(res, dirName, fileName) {
-    res.writeHead(200, {"Content-Type" : "application/zip"});
-    const stream = fs.createReadStream(dirName + "/" + fileName);
-    stream.on("end", function() {
-        exec("rm -rf " + dirName);
+    fs.access(dirName + "/" + fileName, function(err) {
+        if (!err || err.code !== "ENOENT") {
+            res.writeHead(200, {"Content-Type" : "application/zip"});
+            const stream = fs.createReadStream(dirName + "/" + fileName);
+            stream.on("end", function() {
+                exec("rm -rf " + dirName);
+            });
+            stream.pipe(res);
+        } else {
+            res.writeHead(404, {"Content-Type" : "text/plain"});
+            res.write("404 not found");
+            res.end();
+            console.log(dirName + "/" + fileName + " is not found.");
+        }
     });
-    stream.pipe(res);
 }
 
 //run shellScript

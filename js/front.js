@@ -88,8 +88,12 @@ function upload(type) {
 						default: break;
 					}
 				}
+			} else if (httpReq.status == 404) {
+				console.log("404 Not Found!");
+				httpReq.abort();
 			} else {
 				console.log("Failed. HttpStatus: " + httpReq.statusText);
+				httpReq.abort();
 			}
 			break;
 		}
