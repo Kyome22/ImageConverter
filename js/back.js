@@ -4,11 +4,12 @@ const fs = require("fs");
 const formidable = require("formidable");
 const exec = require("child_process").exec;
 //open local server
+const port = (process.argv.length == 3 && isFinite(process.argv[2])) ? process.argv[2] : 8080;
 const server = http.createServer();
 server.on("request", fileRequest);
-server.listen(process.env.VMC_APP_PORT || 8080);
+server.listen(process.env.VMC_APP_PORT || port);
 console.log("Server running ...");
-console.log("http://localhost:8080");
+console.log("http://localhost:" + port);
 
 function fileRequest(req, res) {
     switch (true) {
