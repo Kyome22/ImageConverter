@@ -100,9 +100,9 @@ function upload(type) {
 	}
 	switch(type) {
 		case "iOS":
-		httpReq.open("POST", "http://localhost:8080/api/ios.convert", false); break;
+		httpReq.open("POST", "http://" + document.domain + "/api/ios.convert", false); break;
 		case "Android":
-		httpReq.open("POST", "http://localhost:8080/api/android.convert", false); break;
+		httpReq.open("POST", "http://" + document.domain + "/api/android.convert", false); break;
 		default: break;
 	}
 	let res = httpReq.send(new FormData(document.imageUpload));

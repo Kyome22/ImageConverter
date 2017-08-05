@@ -9,7 +9,6 @@ const server = http.createServer();
 server.on("request", fileRequest);
 server.listen(process.env.VMC_APP_PORT || port);
 console.log("Server running ...");
-console.log("http://localhost:" + port);
 
 function fileRequest(req, res) {
     switch (true) {
