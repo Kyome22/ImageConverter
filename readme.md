@@ -1,6 +1,6 @@
 How to use  
 ===============================
-$ node js/back.js
+$ sh ./run.sh [port number]
 
 and open a web browser  
-access to "http://localhost:8080"  
+access to "http://localhost:[port number]"  
