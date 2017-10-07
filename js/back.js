@@ -20,12 +20,16 @@ function fileRequest(req, res) {
         getFileSupport(res, "./js/front.js", "text/javascript"); break;
         case (/^\/api/).test(req.url):
         switch (true) {
-            case (/\/ios\.convert$/).test(req.url):
-            convertSupport(req, res, "ios"); break;
+            case (/\/iphone\.convert$/).test(req.url):
+            convertSupport(req, res, "iphone"); break;
+            case (/\/ipad\.convert$/).test(req.url):
+            convertSupport(req, res, "ipad"); break;
             case (/\/android\.convert$/).test(req.url):
             convertSupport(req, res, "android"); break;
-            case (/\/ios\.download\//).test(req.url):
-            downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_img.zip"); break;
+            case (/\/iphone\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "iphone_img.zip"); break;
+            case (/\/ipad\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "ipad_img.zip"); break;
             case (/\/android\.download\//).test(req.url):
             downloadSupport(res, "./shed/" + req.url.slice(-9), "android_img.zip"); break;
             default:

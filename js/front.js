@@ -50,7 +50,8 @@ window.onload = function() {
 
 function recommendSize() {
 	switch (document.imageUpload.type.value) {
-		case "iOS":
+		case "iPhone":
+		case "iPad":
 		sizeW.innerHTML = 180;
 		sizeH.innerHTML = 180;
 		break;
