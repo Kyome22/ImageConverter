@@ -52,8 +52,8 @@ function recommendSize() {
 	switch (document.imageUpload.type.value) {
 		case "iPhone":
 		case "iPad":
-		sizeW.innerHTML = 180;
-		sizeH.innerHTML = 180;
+		sizeW.innerHTML = 1024;
+		sizeH.innerHTML = 1024;
 		break;
 		case "Android":
 		sizeW.innerHTML = 192;
@@ -82,8 +82,10 @@ function upload(type) {
 				const result = httpReq.responseText.split(",");
 				if (result[0] == "Success") {
 					switch(type) {
-						case "iOS":
-						setTimeout(function() { download(result[1], "ios"); }, 1000); break;
+						case "iPhone":
+						setTimeout(function() { download(result[1], "iphone"); }, 1000); break;
+						case "iPad":
+						setTimeout(function() { download(result[1], "ipad"); }, 1000); break;
 						case "Android":
 						setTimeout(function() { download(result[1], "android"); }, 1000); break;
 						default: break;
@@ -100,8 +102,10 @@ function upload(type) {
 		}
 	}
 	switch(type) {
-		case "iOS":
-		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/ios.convert", false); break;
+		case "iPhone":
+		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/iphone.convert", false); break;
+		case "iPad":
+		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/ipad.convert", false); break;
 		case "Android":
 		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/android.convert", false); break;
 		default: break;
