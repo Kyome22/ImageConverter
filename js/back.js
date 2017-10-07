@@ -7,7 +7,7 @@ const exec = require("child_process").exec;
 const port = (process.argv.length == 3 && isFinite(process.argv[2])) ? process.argv[2] : 8080;
 const server = http.createServer();
 server.on("request", fileRequest);
-server.listen(process.env.VMC_APP_PORT || 3000);
+server.listen(process.env.VMC_APP_PORT || port);
 console.log("Server running ...");
 
 function fileRequest(req, res) {
