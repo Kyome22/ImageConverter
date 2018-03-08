@@ -5,6 +5,7 @@ const formidable = require("formidable");
 const exec = require("child_process").exec;
 //open local server
 const port = (process.argv.length == 3 && isFinite(process.argv[2])) ? process.argv[2] : 3000;
+//open server
 const server = http.createServer();
 server.on("request", fileRequest);
 server.listen(process.env.VMC_APP_PORT || port);
