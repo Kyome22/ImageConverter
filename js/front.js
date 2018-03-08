@@ -52,8 +52,11 @@ window.onload = function() {
 function recommendSize() {
 	switch (document.imageUpload.type.value) {
 		case "iOS_icon":
-		sizeW.innerHTML = 180;
-		sizeH.innerHTML = 180;
+		case "iOS_corner_radius":
+		case "watchOS_icon":
+		case "macOS_icon":
+		sizeW.innerHTML = 1024;
+		sizeH.innerHTML = 1024;
 		recommendObj.style.color = "#000000";
 		break;
 		case "iOS_univeral":
@@ -90,8 +93,14 @@ function upload(type) {
 					switch(type) {
 						case "iOS_icon":
 						setTimeout(function() { download(result[1], "ios_icon"); }, 1000); break;
+						case "iOS_corner_radius":
+						setTimeout(function() { download(result[1], "ios_corner_radius"); }, 1000); break;
 						case "iOS_universal":
 						setTimeout(function() { download(result[1], "ios_universal"); }, 1000); break;
+						case "watchOS_icon":
+						setTimeout(function() { download(result[1], "watchos_icon"); }, 1000); break;
+						case "macOS_icon":
+						setTimeout(function() { download(result[1], "macos_icon"); }, 1000); break;
 						case "Android_icon":
 						setTimeout(function() { download(result[1], "android_icon"); }, 1000); break;
 						default: break;
@@ -110,8 +119,14 @@ function upload(type) {
 	switch(type) {
 		case "iOS_icon":
 		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/ios_icon.convert", false); break;
+		case "iOS_corner_radius":
+		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/ios_corner_radius.convert", false); break;
 		case "iOS_universal":
 		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/ios_universal.convert", false); break;
+		case "watchOS_icon":
+		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/watchos_icon.convert", false); break;
+		case "macOS_icon":
+		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/macos_icon.convert", false); break;
 		case "Android_icon":
 		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/android_icon.convert", false); break;
 		default: break;

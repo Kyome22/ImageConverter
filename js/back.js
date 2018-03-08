@@ -23,14 +23,26 @@ function fileRequest(req, res) {
         switch (true) {
             case (/\/ios_icon\.convert$/).test(req.url):
             convertSupport(req, res, "ios_icon"); break;
+            case (/\/ios_corner_radius\.convert$/).test(req.url):
+            convertSupport(req, res, "ios_corner_radius"); break;
             case (/\/ios_universal\.convert$/).test(req.url):
             convertSupport(req, res, "ios_universal"); break;
+            case (/\/watchos_icon\.convert$/).test(req.url):
+            convertSupport(req, res, "watchos_icon"); break;
+            case (/\/macos_icon\.convert$/).test(req.url):
+            convertSupport(req, res, "macos_icon"); break;
             case (/\/android_icon\.convert$/).test(req.url):
             convertSupport(req, res, "android_icon"); break;
             case (/\/ios_icon\.download\//).test(req.url):
             downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_icon_img.zip"); break;
+            case (/\/ios_corner_radius\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_corner_radius_img.zip"); break;
             case (/\/ios_universal\.download\//).test(req.url):
             downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_universal_img.zip"); break;
+            case (/\/watchos_icon\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "watchos_icon_img.zip"); break;
+            case (/\/macos_icon\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "macos_icon_img.zip"); break;
             case (/\/android_icon\.download\//).test(req.url):
             downloadSupport(res, "./shed/" + req.url.slice(-9), "android_icon_img.zip"); break;
             default:
