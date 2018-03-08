@@ -1,4 +1,5 @@
 const mainObj = document.getElementById("main");
+const recommendObj = document.getElementById("recommend");
 const sizeW = document.getElementById("w");
 const sizeH = document.getElementById("h");
 const typeObj = document.getElementById("outputType");
@@ -29,7 +30,7 @@ window.onload = function() {
 	mainObj.addEventListener("drop", function(evt) {
 		evt.preventDefault();
 		let type = evt.dataTransfer.files[0].type;
-		if (type == "image/jpeg" || type == "image/png") {
+		if (type == "image/png" || type == "image/jpeg") {
 			fileObj.files = evt.dataTransfer.files;
 		}
 	});
@@ -50,16 +51,22 @@ window.onload = function() {
 
 function recommendSize() {
 	switch (document.imageUpload.type.value) {
-		case "iOS":
+		case "iOS_icon":
 		sizeW.innerHTML = 180;
 		sizeH.innerHTML = 180;
+		recommendObj.style.color = "#000000";
 		break;
-		case "Android":
+		case "iOS_univeral":
+		sizeW.innerHTML = "?";
+		sizeH.innerHTML = "?";
+		recommendObj.style.color = "#f1f3f4";
+		break;
+		case "Android_icon":
 		sizeW.innerHTML = 192;
 		sizeH.innerHTML = 192;
+		recommendObj.style.color = "#000000";
 		break;
 		default:
-
 	}
 }
 
@@ -81,10 +88,12 @@ function upload(type) {
 				const result = httpReq.responseText.split(",");
 				if (result[0] == "Success") {
 					switch(type) {
-						case "iOS":
-						setTimeout(function() { download(result[1], "ios"); }, 1000); break;
-						case "Android":
-						setTimeout(function() { download(result[1], "android"); }, 1000); break;
+						case "iOS_icon":
+						setTimeout(function() { download(result[1], "ios_icon"); }, 1000); break;
+						case "iOS_universal":
+						setTimeout(function() { download(result[1], "ios_universal"); }, 1000); break;
+						case "Android_icon":
+						setTimeout(function() { download(result[1], "android_icon"); }, 1000); break;
 						default: break;
 					}
 				}
@@ -99,10 +108,12 @@ function upload(type) {
 		}
 	}
 	switch(type) {
-		case "iOS":
-		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/ios.convert", false); break;
-		case "Android":
-		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/android.convert", false); break;
+		case "iOS_icon":
+		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/ios_icon.convert", false); break;
+		case "iOS_universal":
+		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/ios_universal.convert", false); break;
+		case "Android_icon":
+		httpReq.open("POST", location.protocol + "//" + document.domain + "/api/android_icon.convert", false); break;
 		default: break;
 	}
 	let res = httpReq.send(new FormData(document.imageUpload));

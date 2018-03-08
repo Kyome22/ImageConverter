@@ -11,11 +11,12 @@
 			<p>
 				出力タイプ：
 				<select name="type" id="outputType">
-					<option value="iOS">iOS</option>
-					<option value="Android">Android</option>
+					<option value="iOS_icon">iOS:icon</option>
+					<option value="iOS_universal">iOS:universal</option>
+					<option value="Android_icon">Android:icon</option>
 				</select>
 			</p>
-			<p><span id="w">0</span>px × <span id="h">0</span>px 推奨</p>
+			<p id="recommend"><span id="w">0</span>px × <span id="h">0</span>px 推奨</p>
 			<p><input type="file" accept="image/jpeg,image/png" name="userfile" id="usrFile"></p>
 			<p class="btn"><input type="submit" value="変換" id="submitBtn"/></p>
 		</form>

@@ -4,7 +4,7 @@ const fs = require("fs");
 const formidable = require("formidable");
 const exec = require("child_process").exec;
 //open local server
-const port = (process.argv.length == 3 && isFinite(process.argv[2])) ? process.argv[2] : 8080;
+const port = (process.argv.length == 3 && isFinite(process.argv[2])) ? process.argv[2] : 3000;
 const server = http.createServer();
 server.on("request", fileRequest);
 server.listen(process.env.VMC_APP_PORT || port);
@@ -20,14 +20,18 @@ function fileRequest(req, res) {
         getFileSupport(res, "./js/front.js", "text/javascript"); break;
         case (/^\/api/).test(req.url):
         switch (true) {
-            case (/\/ios\.convert$/).test(req.url):
-            convertSupport(req, res, "ios"); break;
-            case (/\/android\.convert$/).test(req.url):
-            convertSupport(req, res, "android"); break;
-            case (/\/ios\.download\//).test(req.url):
-            downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_img.zip"); break;
-            case (/\/android\.download\//).test(req.url):
-            downloadSupport(res, "./shed/" + req.url.slice(-9), "android_img.zip"); break;
+            case (/\/ios_icon\.convert$/).test(req.url):
+            convertSupport(req, res, "ios_icon"); break;
+            case (/\/ios_universal\.convert$/).test(req.url):
+            convertSupport(req, res, "ios_universal"); break;
+            case (/\/android_icon\.convert$/).test(req.url):
+            convertSupport(req, res, "android_icon"); break;
+            case (/\/ios_icon\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_icon_img.zip"); break;
+            case (/\/ios_universal\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "ios_universal_img.zip"); break;
+            case (/\/android_icon\.download\//).test(req.url):
+            downloadSupport(res, "./shed/" + req.url.slice(-9), "android_icon_img.zip"); break;
             default:
             res.writeHead(400, {"Content-Type" : "text/plain"});
             res.write("400 Bad Request");
@@ -68,9 +72,10 @@ function convertSupport(req, res, type) {
                 res.end();
             } else {
                 const extension = (files.userfile.type == "image/png") ? ".png" : ".jpeg";
+                const fileName = files.userfile.name.match(/(.*)(?:\.([^.]+$))/)[1];
                 fs.rename(oldpath, "./shed/" + dirName + "/original" + extension, function(err) {
                     if (err) throw err;
-                    run("/bin/bash ./shell/" + type + ".sh " + "./shed/" + dirName + " /original" + extension, function(result) {
+                    run("/bin/bash ./shell/" + type + ".sh " + "./shed/" + dirName + " /original" + extension + " \"" + fileName + "\"", function(result) {
                         res.writeHead(200, {"Content-Type" : "text/plain"});
                         res.write(result + "," + dirName);
                         res.end();
